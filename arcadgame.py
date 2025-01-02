@@ -15,6 +15,7 @@ pygame.display.set_caption("Аркада: Уклоняйся от объекто
 WHITE = (255, 255, 255)
 RED = (255, 0, 0)
 BLUE = (0, 0, 255)
+BLACK = (0, 0, 0)
 
 # Игровые настройки
 player_width = 50
@@ -27,6 +28,9 @@ falling_object_width = 50
 falling_object_height = 50
 falling_object_speed = 5
 falling_objects = []
+
+# Счет
+score = 0
 
 # Шрифт для текста
 font = pygame.font.SysFont(None, 36)
@@ -59,8 +63,12 @@ while not game_over:
     # Обновление позиции падающих объектов
     for obj in falling_objects[:]:
         obj[1] += falling_object_speed
-        if obj[1] > screen_height:
+        if obj[1] > screen_height:  # Если объект ушел за экран
             falling_objects.remove(obj)
+            score += 1  # Увеличиваем счет за успешное избегание
+
+    # Увеличение скорости падения объектов с ростом счета
+    falling_object_speed = 5 + score // 10
 
     # Проверка на столкновение
     for obj in falling_objects:
@@ -75,10 +83,10 @@ while not game_over:
     for obj in falling_objects:
         pygame.draw.rect(screen, RED, (obj[0], obj[1], falling_object_width, falling_object_height))
 
-    display_text("Избегай объектов!", 10, 10, (0, 0, 0))
+    # Отображение счета
+    display_text(f"Счет: {score}", 10, 10, BLACK)
 
     pygame.display.update()
-
     clock.tick(60)  # Обновляем экран 60 раз в секунду
 
 pygame.quit()
